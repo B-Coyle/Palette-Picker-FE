@@ -1,13 +1,32 @@
-// This is the JavaScript entry file - your code begins here
-// Do not delete or rename this file ********
+// import './css/base.scss';
+// import $ from 'jquery';
+const Project = require('./classes/Project');
+const Palette = require('./classes/Palette')
 
-// An example of how you import jQuery into a JS file if you use jQuery in that file
-import $ from 'jquery';
+let projects = [];
 
-// An example of how you tell webpack to use a CSS (SCSS) file
-import './css/base.scss';
+const baseUrl = 'https://palette-picker-jbbc.herokuapp.com/api/v1/';
 
-// An example of how you tell webpack to use an image (also need to link to it in the index.html)
-import './images/turing-logo.png'
+fetch(baseUrl + 'projects').then(result => {
+    return result.json()
+})
+.then(projects => {
+    projects = projects.map(project => {
+        fetch(baseUrl + `palettes?project_id=${project.id}`).then(result => {
+            return result.json()
+        })
+        .then(palettes => {
+            palettes.forEach(palette => {
+                this['project'+ project.id].palettes.push(new Palette(palette))
+            })
+        })
+        return this['project'+ project.id] = new Project(project);
 
-console.log('This is the JavaScript entry file - your code begins here.');
+    })
+    console.log(projects)
+})
+
+
+
+
+
