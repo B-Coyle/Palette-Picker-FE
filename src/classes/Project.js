@@ -1,8 +1,6 @@
-const projectsUrl = '/api/v1/projects';
-const palettesUrl = '/api/v1/palettes';
 
 
-class Project {
+ class Project {
     constructor({project}){
         this.project_name = project_name;
         this.palettes = [];

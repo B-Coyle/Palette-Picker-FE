@@ -1,4 +1,4 @@
-import Color from './Color'
+const Color = require ('./Color');
 
 class Palette {
     constructor({palette}){

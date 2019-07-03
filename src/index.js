@@ -1,9 +1,29 @@
-import $ from 'jquery';
+// import './css/base.scss';
+// import $ from 'jquery';
+const Project = require('./classes/Project');
+const Palette = require('./classes/Palette')
 
-import './css/base.scss';
+let projects = [];
 
-const projectsUrl = '/api/v1/projects';
-const palettesUrl = '/api/v1/palettes';
+const baseUrl = 'https://palette-picker-jbbc.herokuapp.com/api/v1/';
+
+fetch(baseUrl + 'projects').then(result => {
+    return result.json()
+})
+.then(projects => {
+    projects = projects.map(project => {
+        this['project'+ project.id] = new Project(project);
+        fetch(baseUrl + `palettes?project_id=${project.id}`).then(result => {
+            return result.json()
+        })
+        .then(palette => {
+            this['project'+ project.id].palettes.push(new Palette(palette))
+        })
+
+    })
+
+}).then(() => console.log(projects))
+
 
 
 
