@@ -1,8 +1,8 @@
 
 
  class Project {
-    constructor({project}){
-        this.project_name = project_name;
+    constructor(project){
+        this.project_name = project.project_name;
         this.palettes = [];
     }
 
