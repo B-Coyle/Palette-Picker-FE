@@ -14,3 +14,5 @@ class Palette {
     //edit a palette
 
 }
+
+module.exports = Palette;

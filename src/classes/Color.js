@@ -7,3 +7,5 @@ class Color {
     //lock color
     //edit hex code
 }
+
+module.exports = Color;
