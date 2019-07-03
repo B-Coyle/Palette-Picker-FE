@@ -5,8 +5,14 @@ class Project {
         this.palettes = [];
     }
 
+    //fetch projects
+
+    //fetch palettes
+
+    //add a palette
+
+    //
 
 }
 
 //instance of project 
-//query param, fetch projects, get the project id, another method for palettes
