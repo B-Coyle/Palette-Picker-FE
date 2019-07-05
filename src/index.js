@@ -21,7 +21,6 @@ fetch(baseUrl + 'projects').then(result => {
             })
         })
         return this['project'+ project.id] = new Project(project);
-
     })
     console.log(projects)
 })
