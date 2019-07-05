@@ -4,6 +4,49 @@
     <title>Palette Picker</title>
   </head>
   <body>
-    <h1>Palette Picker</h1>
+    <header>
+      <h1>Palette Picker</h1>
+    </header>
+    <section class="palette-container">
+      <div id="color1" class="color-container">
+        <button id="0" class="color-lock"></button>
+        <p id="color-one-name" class="color-hex"></p>
+      </div>
+      <div id="color2" class="color-container">
+        <button id="1" class="color-lock"></button>
+        <p id="color-two-name" class="color-hex"></p>
+      </div>
+      <div id="color3" class="color-container">
+        <button id="2" class="color-lock"></button>
+        <p id="color-three-name" class="color-hex"></p>
+      </div>
+      <div id="color4" class="color-container">
+        <button id="3" class="color-lock"></button>
+        <p id="color-four-name" class="color-hex"></p>
+      </div>
+      <div id="color5" class="color-container">
+        <button id="4" class="color-lock"></button>
+        <p id="color-five-name" class="color-hex"></p>
+      </div>
+    </section>
+    <section class='generate-palette'>
+        <button class='generate-palette-btn'></button>
+    </section>
+    <section class='form-container'>
+      <form id='name-project-form'>
+        <input class='project-name-input' type='text' placeholder="New Project Name">
+        <button class='button' id='create-project-btn' type="submit"></button>
+      </form> 
+    </section>
+    <section class='form-container'>
+      <form id='name-palette-form'>
+        <select id='project-select'> </select>
+        <input class='palette-name-input' type='text' placeholder='Palette Name' />
+        <button class='button' type="submit" id='palette-submit'></button>
+      </form>
+    </section>
+    <section class='saved-projects-section'>
+      <div class='saved-projects-container'></div>
+    </section>
   </body>
 </html>
