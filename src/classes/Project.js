@@ -1,4 +1,4 @@
-
+import domUpdates from './domUpdates';
 
  class Project {
     constructor(project){
