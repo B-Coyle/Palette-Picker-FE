@@ -1,8 +1,7 @@
-// import './css/base.scss';
-// import $ from 'jquery';
 const Project = require('./classes/Project');
 const Palette = require('./classes/Palette')
-
+import $ from 'jquery';
+import './css/styles.scss';
 let projects = [];
 
 const baseUrl = 'https://palette-picker-jbbc.herokuapp.com/api/v1/';
