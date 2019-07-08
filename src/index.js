@@ -12,6 +12,7 @@ $( document ).ready(function() {
 
 $("#create-project-btn").on("click", e => createProject(e));
 $("#create-palette-btn").on("click", e => createPalette(e));
+$('.color-lock').on('click', e => toggleLock(e));
 
 const baseUrl = "https://palette-picker-jbbc.herokuapp.com/api/v1/";
 
@@ -80,7 +81,7 @@ function createPalette(e) {
 //     headers: {
 //       "Content-type": "application/json"
 //     },
-//     body: JSON.stringify({ project_name: name })
+//     body: JSON.stringify({ palette_name: name })
 //   };
 //   fetch(baseUrl + "projects", options)
 //     .then(result => {
@@ -103,4 +104,10 @@ function generateColors() {
             $(`#color${index+1}-name`).text(color);
         }
     })
+}
+
+function toggleLock(e) {
+    const id = e.target.id;
+    const locked = $(`#color${id}`).data().locked
+    $(`#color${id}`).data('locked', !locked);
 }
