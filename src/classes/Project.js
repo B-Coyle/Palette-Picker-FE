@@ -12,9 +12,4 @@ import domUpdates from './domUpdates';
     }
 
 }
-
-
-//need to add a locked in status (to project/palette or just palette)
-//instance of project 
-//might need a domupdates later to reflect changes
 export default Project;

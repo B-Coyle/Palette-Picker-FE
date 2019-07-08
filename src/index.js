@@ -2,21 +2,20 @@ import Project from "./classes/Project";
 import Palette from "./classes/Palette";
 import $ from "jquery";
 import "./css/styles.scss";
-import randomHexColor from 'random-hex-color';
-import savedProject from './savedProject';
-
+import randomHexColor from "random-hex-color";
+import savedProject from "./savedProject";
 
 let projects = [];
 
-$( document ).ready(function() {
-    generateColors();
+$(document).ready(function() {
+  generateColors();
 });
 
 $("#create-project-btn").on("click", e => createProject(e));
 $("#create-palette-btn").on("click", e => createPalette(e));
-$('.color-lock').on('click', e => toggleLock(e));
+$(".color-lock").on("click", e => toggleLock(e));
 $(".generate-palette-btn").on("click", generateColors);
-$('.saved-projects-section').on('click', e => buttonRouter(e))
+$(".saved-projects-section").on("click", e => buttonRouter(e));
 
 const baseUrl = "https://palette-picker-jbbc.herokuapp.com/api/v1/";
 
@@ -93,60 +92,74 @@ function createPalette(e) {
     })
     .then(data => {
       const newPalette = { ...palette, id: data.id };
-      const targetProject = projects.find(project => project.id == newPalette.project_id)
+      const targetProject = projects.find(
+        project => project.id == newPalette.project_id
+      );
       targetProject.palettes.push(new Palette(newPalette));
     });
 }
 
-
 function generateColors() {
-    let id = 1;
-    while (id <= 5) {
-        const locked = $(`#color${id}`).data().locked
-        if(!locked) {
-            const color = randomHexColor();
-            $(`#color${id}`).css('background-color', color);
-            $(`#color${id}-name`).text(color);
-        }
-        id++;
-    }   
+  let id = 1;
+  while (id <= 5) {
+    const locked = $(`#color${id}`).data().locked;
+    if (!locked) {
+      const color = randomHexColor();
+      $(`#color${id}`).css("background-color", color);
+      $(`#color${id}-name`).text(color);
+    }
+    id++;
+  }
 }
 
 function toggleLock(e) {
-    const id = e.target.id;
-    const locked = $(`#color${id}`).data().locked
-    $(`#color${id}`).data('locked', !locked);
-    $(`.color-lock${id}`).toggleClass('fa-lock-open');
-    $(`.color-lock${id}`).toggleClass('fa-lock');
+  const id = e.target.id;
+  const locked = $(`#color${id}`).data().locked;
+  $(`#color${id}`).data("locked", !locked);
+  $(`.color-lock${id}`).toggleClass("fa-lock-open");
+  $(`.color-lock${id}`).toggleClass("fa-lock");
 }
 
 function populateSavedProjects(project) {
-    $('.saved-projects-section').append(savedProject(project))
+  $(".saved-projects-section").append(savedProject(project));
 }
 
 function buttonRouter(e) {
-    const targetClasses = [...e.target.classList];
-    if(targetClasses.includes('trash-btn')){
-        deletePalette(e);
-    }
+  const targetClasses = [...e.target.classList];
+  if (targetClasses.includes("trash-btn")) {
+    deletePalette(e);
+  } else if(targetClasses.includes('delete-project-btn')){
+    deleteProject(e);
+  }
 }
 
 function deletePalette(e) {
-    const id = e.target.id;
-    const projectID = e.target.dataset.project;
+  const id = e.target.id;
+  const projectID = e.target.dataset.project;
 
-    fetch(baseUrl + 'palettes/' + id, {
-        method:'DELETE'
-    })
+  fetch(baseUrl + "palettes/" + id, {
+    method: "DELETE"
+  })
     .then(response => {
-        if (response.ok){
-           const targetProject = projects.find(project => project.id == projectID)
-           console.log(targetProject);
-           targetProject.palettes.filter(palette => palette.id !== id )
-           console.log($(`#palette${id}`))
-           $(`#palette${id}`).remove();
-        }
+      if (response.ok) {
+        const targetProject = projects.find(project => project.id == projectID);
+        targetProject.palettes.filter(palette => palette.id !== id);
+        $(`#palette${id}`).remove();
+      }
     })
-    .catch(error => console.log(error))
-    // .then(result => console.log(result))
+    .catch(error => console.log(error));
+}
+
+function deleteProject(e) {
+  const id = e.target.id;
+  fetch(baseUrl + "projects/" + id, {
+    method: "DELETE"
+  })
+    .then(response => {
+      if (response.ok) {
+        projects.filter(project => project.id !== id);
+        $(`#project${id}`).remove();
+      }
+    })
+    .catch(error => console.log(error));
 }
