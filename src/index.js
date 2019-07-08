@@ -3,6 +3,8 @@ import Palette from "./classes/Palette";
 import $ from "jquery";
 import "./css/styles.scss";
 import randomHexColor from 'random-hex-color';
+import savedProject from './savedProject';
+
 
 let projects = [];
 
@@ -35,6 +37,7 @@ fetch(baseUrl + "projects")
           });
           projects.push(new Project(project));
           populateOptions(project);
+          populateSavedProjects(project);
         });
     });
   });
@@ -111,4 +114,8 @@ function toggleLock(e) {
     const id = e.target.id;
     const locked = $(`#color${id}`).data().locked
     $(`#color${id}`).data('locked', !locked);
+}
+
+function populateSavedProjects(project) {
+    $('.saved-projects-section').append(savedProject(project))
 }

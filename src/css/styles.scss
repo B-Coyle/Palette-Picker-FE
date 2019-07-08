@@ -218,3 +218,17 @@ button {
   height: 30px;
   width: auto;
 }
+
+.saved-palettes{
+  display: flex;
+  flex-direction: row;
+}
+
+.saved-color {
+  height: 40px;
+  width: 60px;
+}
+
+.fa-trash-alt {
+  margin: 3px 10px;
+}
