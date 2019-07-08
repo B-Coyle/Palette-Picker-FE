@@ -16,7 +16,7 @@ $("#create-project-btn").on("click", e => createProject(e));
 $("#create-palette-btn").on("click", e => createPalette(e));
 $('.color-lock').on('click', e => toggleLock(e));
 $(".generate-palette-btn").on("click", generateColors);
-
+$('.saved-projects-section').on('click', e => buttonRouter(e))
 
 const baseUrl = "https://palette-picker-jbbc.herokuapp.com/api/v1/";
 
@@ -109,7 +109,7 @@ function generateColors() {
             $(`#color${id}-name`).text(color);
         }
         id++;
-    }
+    }   
 }
 
 function toggleLock(e) {
@@ -124,3 +124,29 @@ function populateSavedProjects(project) {
     $('.saved-projects-section').append(savedProject(project))
 }
 
+function buttonRouter(e) {
+    const targetClasses = [...e.target.classList];
+    if(targetClasses.includes('trash-btn')){
+        deletePalette(e);
+    }
+}
+
+function deletePalette(e) {
+    const id = e.target.id;
+    const projectID = e.target.dataset.project;
+
+    fetch(baseUrl + 'palettes/' + id, {
+        method:'DELETE'
+    })
+    .then(response => {
+        if (response.ok){
+           const targetProject = projects.find(project => project.id == projectID)
+           console.log(targetProject);
+           targetProject.palettes.filter(palette => palette.id !== id )
+           console.log($(`#palette${id}`))
+           $(`#palette${id}`).remove();
+        }
+    })
+    .catch(error => console.log(error))
+    // .then(result => console.log(result))
+}
