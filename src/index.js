@@ -22,6 +22,7 @@ fetch(baseUrl + 'projects').then(result => {
                project.palettes.push(new Palette(palette))
             })
             projects.push(new Project(project));
+            populateOptions(project);
         })
     })
 })
@@ -42,7 +43,18 @@ function createProject(e) {
     .then(data => {
         const project = {project_name: name, id: data.id}
         projects.push(new Project(project));
+        populateOptions(project);
     })
+}
+
+function populateOptions(project) {
+        $('#project-select').append(`<option value=${project.id}>${project.project_name}</option>`)
+}
+
+function createPalette(e) {
+    e.preventDefault();
+
+
 }
 
 
