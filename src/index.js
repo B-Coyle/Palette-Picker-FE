@@ -13,6 +13,8 @@ $( document ).ready(function() {
 $("#create-project-btn").on("click", e => createProject(e));
 $("#create-palette-btn").on("click", e => createPalette(e));
 $('.color-lock').on('click', e => toggleLock(e));
+$(".generate-palette-btn").on("click", generateColors);
+
 
 const baseUrl = "https://palette-picker-jbbc.herokuapp.com/api/v1/";
 
@@ -83,14 +85,14 @@ function createPalette(e) {
 //     },
 //     body: JSON.stringify({ palette_name: name })
 //   };
-//   fetch(baseUrl + "projects", options)
+//   fetch(baseUrl + "palettes", options)
 //     .then(result => {
 //       return result.json();
 //     })
 //     .then(data => {
-//       const project = { project_name: name, id: data.id };
-//       projects.push(new Project(project));
-//       populateOptions(project);
+//       const palette = { palette_name: name, id: data.id };
+//       projects.push(new Palette(palette));
+//       populateOptions(palette);
 //     });
 }
 
