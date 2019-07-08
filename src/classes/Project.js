@@ -2,8 +2,9 @@ import domUpdates from './domUpdates';
 
  class Project {
     constructor(project){
+        this.id = project.id;
         this.project_name = project.project_name;
-        this.palettes = [];
+        this.palettes = project.palettes || [];
     }
 
     //fetch projects
@@ -17,4 +18,4 @@ import domUpdates from './domUpdates';
 }
 //need to add a locked in status (to project/palette or just palette)
 //instance of project 
-module.exports = Project;
+export default Project;

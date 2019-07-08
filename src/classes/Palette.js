@@ -16,4 +16,4 @@ class Palette {
 
 }
 
-module.exports = Palette;
+export default Palette;
