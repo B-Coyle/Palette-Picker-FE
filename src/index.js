@@ -100,22 +100,27 @@ function createPalette(e) {
 
 
 function generateColors() {
-    $('.color-container').each((index) => {
-        const locked = $(`#color${index+1}`).data().locked
+    let id = 1;
+    while (id <= 5) {
+        const locked = $(`#color${id}`).data().locked
         if(!locked) {
             const color = randomHexColor();
-            $(`#color${index+1}`).css('background-color', color);
-            $(`#color${index+1}-name`).text(color);
+            $(`#color${id}`).css('background-color', color);
+            $(`#color${id}-name`).text(color);
         }
-    })
+        id++;
+    }
 }
 
 function toggleLock(e) {
     const id = e.target.id;
     const locked = $(`#color${id}`).data().locked
     $(`#color${id}`).data('locked', !locked);
+    $(`.color-lock${id}`).toggleClass('fa-lock-open');
+    $(`.color-lock${id}`).toggleClass('fa-lock');
 }
 
 function populateSavedProjects(project) {
     $('.saved-projects-section').append(savedProject(project))
 }
+
