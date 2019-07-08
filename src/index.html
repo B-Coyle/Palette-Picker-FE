@@ -8,25 +8,25 @@
       <h1>Palette Picker</h1>
     </header>
     <section class="palette-container">
-      <div id="color1" class="color-container">
-        <input type="button" id="0" class="color-lock" value='Lock Color' />
-        <p id="color-one-name" class="color-hex"></p>
+      <div id="color1" class="color-container" data-locked=false>
+        <input type="button" id="0" class="color-lock" value='Lock Color'/>
+        <p id="color1-name" class="color-hex"></p>
       </div>
-      <div id="color2" class="color-container">
+      <div id="color2" class="color-container" data-locked=false>
         <input type='button' id="1" class="color-lock" value='Lock Color'>
-        <p id="color-two-name" class="color-hex"></p>
+        <p id="color2-name" class="color-hex"></p>
       </div>
-      <div id="color3" class="color-container">
+      <div id="color3" class="color-container" data-locked=false>
         <input type='button' id="2" class="color-lock" value='Lock Color'>
-        <p id="color-three-name" class="color-hex"></p>
+        <p id="color3-name" class="color-hex"></p>
       </div>
-      <div id="color4" class="color-container">
+      <div id="color4" class="color-container" data-locked=false>
         <input type='button' id="3" class="color-lock" value='Lock Color'>
-        <p id="color-four-name" class="color-hex"></p>
+        <p id="color4-name" class="color-hex"></p>
       </div>
-      <div id="color5" class="color-container">
+      <div id="color5" class="color-container" data-locked=false>
         <input type='button' id="4" class="color-lock" value='Lock Color'>
-        <p id="color-five-name" class="color-hex"></p>
+        <p id="color5-name" class="color-hex"></p>
       </div>
     </section>
     <section class='generate-palette'>
@@ -42,7 +42,7 @@
       <form id='name-palette-form'>
         <select id='project-select'> </select>
         <input class='palette-name-input' type='text' placeholder='Palette Name' />
-        <input class='button' type="button" id='palette-submit' value='Create Palette' />
+        <input class='button' type="button" id='create-palette-btn' value='Create Palette' />
       </form>
     </section>
     <section class='saved-projects-section'>
