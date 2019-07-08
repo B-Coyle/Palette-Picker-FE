@@ -1,5 +1,9 @@
 import $ from 'jquery';
+import Palette from './Palette';
+import Project from './Project';
 
-export default {
-    
+let domUpdates = {
+
 }
+
+export default domUpdates;

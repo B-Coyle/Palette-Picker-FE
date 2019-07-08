@@ -1,20 +1,15 @@
-
+import domUpdates from './domUpdates';
 
  class Project {
     constructor(project){
+        this.id = project.id;
         this.project_name = project.project_name;
-        this.palettes = [];
+        this.palettes = project.palettes || [];
     }
 
-    //fetch projects
-
-    //fetch palettes
-
-    //add a palette
-
-    //
+   addPalette(palette){
+       this.palettes.push(palette);
+    }
 
 }
-//need to add a locked in status (to project/palette or just palette)
-//instance of project 
-module.exports = Project;
+export default Project;
