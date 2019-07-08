@@ -77,23 +77,22 @@ function createPalette(e) {
     color5: $("#color5-name").text(),
     project_id: $("#project-select").val()
   };
-  console.log('palette test', palette);
-//   const options = {
-//     method: "POST",
-//     headers: {
-//       "Content-type": "application/json"
-//     },
-//     body: JSON.stringify({ palette_name: name })
-//   };
-//   fetch(baseUrl + "palettes", options)
-//     .then(result => {
-//       return result.json();
-//     })
-//     .then(data => {
-//       const palette = { palette_name: name, id: data.id };
-//       projects.push(new Palette(palette));
-//       populateOptions(palette);
-//     });
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: JSON.stringify(palette)
+  };
+  fetch(baseUrl + "palettes", options)
+    .then(result => {
+      return result.json();
+    })
+    .then(data => {
+      const newPalette = { ...palette, id: data.id };
+      const targetProject = projects.find(project => project.id == newPalette.project_id)
+      targetProject.palettes.push(new Palette(newPalette));
+    });
 }
 
 

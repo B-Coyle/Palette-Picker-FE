@@ -1,7 +1,8 @@
 
 class Palette {
     constructor(palette){
-        const {palette_name, color1, color2, color3, color4, color5, project_id} = palette;
+        const {palette_name, color1, color2, color3, color4, color5, project_id, id} = palette;
+        this.id = id
         this.palette_name = palette_name || ''
         this.color1 = color1 || '';
         this.color2 = color2 || '';
