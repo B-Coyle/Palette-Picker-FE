@@ -1,13 +1,13 @@
 import $ from "jquery";
 import "./css/styles.scss";
 import randomHexColor from "random-hex-color";
-import generateProjectHTML from "./generateProjectHTML";
-import generatePaletteHTML from "./generatePaletteHTML";
 import { fetchProjects } from "./api/fetchProjects";
 import { fetchPalettes } from "./api/fetchPalettes";
 import { fetchPostProject } from "./api/fetchPostProject";
 import { fetchPostPalette } from "./api/fetchPostPalette";
 import { fetchDeletePalette } from "./api/fetchDeletePalette";
+import { fetchDeleteProject } from "./api/fetchDeleteProject";
+import { DU } from './domUpdates';
 
 let projects = [];
 
@@ -43,8 +43,8 @@ export const generateProject = (project, palettes) => {
     project.palettes.push(palette);
   });
   projects.push(project);
-  populateOptions(project);
-  populateSavedProject(project);
+  DU.populateOptions(project);
+  DU.appendProject(project);
 };
 
 export function createProject(e) {
@@ -54,15 +54,9 @@ export function createProject(e) {
     .then(data => {
       const project = { project_name: name, id: data.id, palettes: [] };
       projects.push(project);
-      populateOptions(project);
-      populateSavedProject(project);
+      DU.populateOptions(project);
+      DU.appendProject(project);
     });
-}
-
-export function populateOptions(project) {
-  $("#project-select").append(
-    `<option value=${project.id} id='project-option${project.id}'>${project.project_name}</option>`
-  );
 }
 
 export function createPalette(e) {
@@ -83,7 +77,7 @@ export function createPalette(e) {
         project => project.id == newPalette.project_id
       );
       targetProject.palettes.push(newPalette);
-      $(`#project${targetProject.id}`).append(generatePaletteHTML(newPalette))
+      DU.appendPalette(targetProject, newPalette)
     });
 }
 
@@ -93,8 +87,7 @@ export function generateColors() {
     const locked = $(`#color${id}`).data().locked;
     if (!locked) {
       const color = randomHexColor();
-      $(`#color${id}`).css("background-color", color);
-      $(`#color${id}-name`).text(color);
+      DU.changeColor(id, color);
     }
     id++;
   }
@@ -103,14 +96,10 @@ export function generateColors() {
 export function toggleLock(e) {
   const id = e.target.id;
   const locked = $(`#color${id}`).data().locked;
-  $(`#color${id}`).data("locked", !locked);
-  $(`.color-lock${id}`).toggleClass("fa-lock-open");
-  $(`.color-lock${id}`).toggleClass("fa-lock");
+  DU.toggleLock(id, locked);
 }
 
-export function populateSavedProject(project) {
-  $(".saved-projects-section").append(generateProjectHTML(project));
-}
+
 
 export function buttonRouter(e) {
   const targetClasses = [...e.target.classList];
@@ -130,7 +119,7 @@ export function deletePalette(e) {
       if (response.ok) {
         const targetProject = projects.find(project => project.id == projectID);
         targetProject.palettes.filter(palette => palette.id !== id);
-        $(`#palette${id}`).remove();
+        DU.removePalette(id);
       }
     })
     .catch(error => console.log(error));
@@ -142,8 +131,7 @@ export function deleteProject(e) {
     .then(response => {
       if (response.ok) {
         projects.filter(project => project.id !== id);
-        $(`#project${id}`).remove();
-        $(`#project-option${id}`).remove();
+        DU.removeProject(id);
       }
     })
     .catch(error => console.log(error));
