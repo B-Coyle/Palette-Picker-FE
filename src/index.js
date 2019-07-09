@@ -3,12 +3,14 @@ import Palette from "./classes/Palette";
 import $ from "jquery";
 import "./css/styles.scss";
 import randomHexColor from "random-hex-color";
-import savedProject from "./savedProject";
+import savedProject from "./generateProjectHTML";
+import generatePaletteHTML from "./generatePalleteHTML";
 
 let projects = [];
 
 $(document).ready(function() {
   generateColors();
+  getProjects();
 });
 
 $("#create-project-btn").on("click", e => createProject(e));
@@ -19,29 +21,33 @@ $(".saved-projects-section").on("click", e => buttonRouter(e));
 
 const baseUrl = "https://palette-picker-jbbc.herokuapp.com/api/v1/";
 
-fetch(baseUrl + "projects")
-  .then(result => {
-    return result.json();
-  })
-  .then(projectsData => {
-    projectsData.forEach(project => {
-      fetch(baseUrl + `palettes?project_id=${project.id}`)
-        .then(result => {
-          return result.json();
-        })
-        .then(palettes => {
-          project.palettes = [];
-          palettes.forEach(palette => {
-            project.palettes.push(new Palette(palette));
-          });
-          projects.push(new Project(project));
-          populateOptions(project);
-          populateSavedProjects(project);
-        });
-    });
+const getProjects = () => {
+  fetch(baseUrl + "projects")
+    .then(result => result.json())
+    .then(projectsData => getPalletes(projectsData))
+    .catch(error => console.log(error));
+}
+
+const getPalletes = (projectsData) => {
+  projectsData.forEach(project => {
+    fetch(baseUrl + `palettes?project_id=${project.id}`)
+      .then(result => result.json())
+      .then(palettes => generateProject(project, palettes))
   });
+}
+
+const generateProject = (project, palettes) => {
+  project.palettes = [];
+  palettes.forEach(palette => {
+    project.palettes.push(new Palette(palette));
+  });
+  projects.push(new Project(project));
+  populateOptions(project);
+  populateSavedProjects(project);
+};
 
 function createProject(e) {
+  console.log('create');
   e.preventDefault();
   const name = $(".project-name-input").val();
   const options = {
@@ -96,6 +102,7 @@ function createPalette(e) {
         project => project.id == newPalette.project_id
       );
       targetProject.palettes.push(new Palette(newPalette));
+      $(`#project${targetProject.id}`).append(generatePaletteHTML(newPalette))
     });
 }
 
