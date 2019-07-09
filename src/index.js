@@ -3,6 +3,11 @@ import "./css/styles.scss";
 import randomHexColor from "random-hex-color";
 import generateProjectHTML from "./generateProjectHTML";
 import generatePaletteHTML from "./generatePaletteHTML";
+import { fetchProjects } from "./api/fetchProjects";
+import { fetchPalettes } from "./api/fetchPalettes";
+import { fetchPostProject } from "./api/fetchPostProject";
+import { fetchPostPalette } from "./api/fetchPostPalette";
+import { fetchDeletePalette } from "./api/fetchDeletePalette";
 
 let projects = [];
 
@@ -19,22 +24,20 @@ $(".saved-projects-section").on("click", e => buttonRouter(e));
 
 const baseUrl = "https://palette-picker-jbbc.herokuapp.com/api/v1/";
 
-const getProjects = () => {
-  fetch(baseUrl + "projects")
-    .then(result => result.json())
+export const getProjects = () => {
+  fetchProjects()
     .then(projectsData => getPalettes(projectsData))
     .catch(error => console.log(error));
 }
 
-const getPalettes = (projectsData) => {
+export const getPalettes = (projectsData) => {
   projectsData.forEach(project => {
-    fetch(baseUrl + `palettes?project_id=${project.id}`)
-      .then(result => result.json())
+    fetchPalettes(project)
       .then(palettes => generateProject(project, palettes))
   });
 }
 
-const generateProject = (project, palettes) => {
+export const generateProject = (project, palettes) => {
   project.palettes = [];
   palettes.forEach(palette => {
     project.palettes.push(palette);
@@ -44,20 +47,10 @@ const generateProject = (project, palettes) => {
   populateSavedProject(project);
 };
 
-function createProject(e) {
+export function createProject(e) {
   e.preventDefault();
   const name = $(".project-name-input").val();
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json"
-    },
-    body: JSON.stringify({ project_name: name })
-  };
-  fetch(baseUrl + "projects", options)
-    .then(result => {
-      return result.json();
-    })
+  fetchPostProject(name)
     .then(data => {
       const project = { project_name: name, id: data.id, palettes: [] };
       projects.push(project);
@@ -66,13 +59,13 @@ function createProject(e) {
     });
 }
 
-function populateOptions(project) {
+export function populateOptions(project) {
   $("#project-select").append(
     `<option value=${project.id} id='project-option${project.id}'>${project.project_name}</option>`
   );
 }
 
-function createPalette(e) {
+export function createPalette(e) {
   e.preventDefault();
   const palette = {
     palette_name: $(".palette-name-input").val(),
@@ -83,28 +76,18 @@ function createPalette(e) {
     color5: $("#color5-name").text(),
     project_id: $("#project-select").val()
   };
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json"
-    },
-    body: JSON.stringify(palette)
-  };
-  fetch(baseUrl + "palettes", options)
-    .then(result => {
-      return result.json();
-    })
+  fetchPostPalette(palette)
     .then(data => {
       const newPalette = { ...palette, id: data.id };
       const targetProject = projects.find(
         project => project.id == newPalette.project_id
       );
-      targetProject.palettes.push(new Palette(newPalette));
+      targetProject.palettes.push(newPalette);
       $(`#project${targetProject.id}`).append(generatePaletteHTML(newPalette))
     });
 }
 
-function generateColors() {
+export function generateColors() {
   let id = 1;
   while (id <= 5) {
     const locked = $(`#color${id}`).data().locked;
@@ -117,7 +100,7 @@ function generateColors() {
   }
 }
 
-function toggleLock(e) {
+export function toggleLock(e) {
   const id = e.target.id;
   const locked = $(`#color${id}`).data().locked;
   $(`#color${id}`).data("locked", !locked);
@@ -125,11 +108,11 @@ function toggleLock(e) {
   $(`.color-lock${id}`).toggleClass("fa-lock");
 }
 
-function populateSavedProject(project) {
+export function populateSavedProject(project) {
   $(".saved-projects-section").append(generateProjectHTML(project));
 }
 
-function buttonRouter(e) {
+export function buttonRouter(e) {
   const targetClasses = [...e.target.classList];
   if (targetClasses.includes("trash-btn")) {
     deletePalette(e);
@@ -138,13 +121,11 @@ function buttonRouter(e) {
   }
 }
 
-function deletePalette(e) {
+export function deletePalette(e) {
   const id = e.target.id;
   const projectID = e.target.dataset.project;
 
-  fetch(baseUrl + "palettes/" + id, {
-    method: "DELETE"
-  })
+  fetchDeletePalette(id)
     .then(response => {
       if (response.ok) {
         const targetProject = projects.find(project => project.id == projectID);
@@ -155,11 +136,9 @@ function deletePalette(e) {
     .catch(error => console.log(error));
 }
 
-function deleteProject(e) {
+export function deleteProject(e) {
   const id = e.target.id;
-  fetch(baseUrl + "projects/" + id, {
-    method: "DELETE"
-  })
+  fetchDeleteProject(id)
     .then(response => {
       if (response.ok) {
         projects.filter(project => project.id !== id);
