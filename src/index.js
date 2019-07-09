@@ -1,10 +1,8 @@
-import Project from "./classes/Project";
-import Palette from "./classes/Palette";
 import $ from "jquery";
 import "./css/styles.scss";
 import randomHexColor from "random-hex-color";
-import savedProject from "./generateProjectHTML";
-import generatePaletteHTML from "./generatePalleteHTML";
+import generateProjectHTML from "./generateProjectHTML";
+import generatePaletteHTML from "./generatePaletteHTML";
 
 let projects = [];
 
@@ -24,11 +22,11 @@ const baseUrl = "https://palette-picker-jbbc.herokuapp.com/api/v1/";
 const getProjects = () => {
   fetch(baseUrl + "projects")
     .then(result => result.json())
-    .then(projectsData => getPalletes(projectsData))
+    .then(projectsData => getPalettes(projectsData))
     .catch(error => console.log(error));
 }
 
-const getPalletes = (projectsData) => {
+const getPalettes = (projectsData) => {
   projectsData.forEach(project => {
     fetch(baseUrl + `palettes?project_id=${project.id}`)
       .then(result => result.json())
@@ -39,15 +37,14 @@ const getPalletes = (projectsData) => {
 const generateProject = (project, palettes) => {
   project.palettes = [];
   palettes.forEach(palette => {
-    project.palettes.push(new Palette(palette));
+    project.palettes.push(palette);
   });
-  projects.push(new Project(project));
+  projects.push(project);
   populateOptions(project);
-  populateSavedProjects(project);
+  populateSavedProject(project);
 };
 
 function createProject(e) {
-  console.log('create');
   e.preventDefault();
   const name = $(".project-name-input").val();
   const options = {
@@ -62,15 +59,16 @@ function createProject(e) {
       return result.json();
     })
     .then(data => {
-      const project = { project_name: name, id: data.id };
-      projects.push(new Project(project));
+      const project = { project_name: name, id: data.id, palettes: [] };
+      projects.push(project);
       populateOptions(project);
+      populateSavedProject(project);
     });
 }
 
 function populateOptions(project) {
   $("#project-select").append(
-    `<option value=${project.id}>${project.project_name}</option>`
+    `<option value=${project.id} id='project-option${project.id}'>${project.project_name}</option>`
   );
 }
 
@@ -127,8 +125,8 @@ function toggleLock(e) {
   $(`.color-lock${id}`).toggleClass("fa-lock");
 }
 
-function populateSavedProjects(project) {
-  $(".saved-projects-section").append(savedProject(project));
+function populateSavedProject(project) {
+  $(".saved-projects-section").append(generateProjectHTML(project));
 }
 
 function buttonRouter(e) {
@@ -166,6 +164,7 @@ function deleteProject(e) {
       if (response.ok) {
         projects.filter(project => project.id !== id);
         $(`#project${id}`).remove();
+        $(`#project-option${id}`).remove();
       }
     })
     .catch(error => console.log(error));
