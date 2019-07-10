@@ -51,16 +51,16 @@ export const generateProject = (project, palettes) => {
 export function createProject(e) {
   e.preventDefault();
   const name = $(".project-name-input").val();
-   fetchPostProject(name).then(data => {
-    if(!projects.map(project => project.name).includes(name)){
+  fetchPostProject(name).then(data => {
+    if (!projects.map(project => project.name).includes(name)) {
+      $(".project-exists").removeClass("hidden");
+    } else {
+      $(".project-exists").addClass("hidden");
       const project = { project_name: name, id: data.id, palettes: [] };
       projects.push(project);
       DU.populateOptions(project);
       DU.appendProject(project);
       DU.resetInputs();
-    
-    } else {
-      $('.project-exists').removeClass('hidden')
     }
   });
 }
