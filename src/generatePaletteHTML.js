@@ -33,6 +33,12 @@ function generatePaletteHTML(palette) {
       >
       </div>
       <button 
+      id=${palette.id} 
+      data-project=${palette.project_id} 
+      class='edit-palette-btn'>
+      Edit Palette
+      </button>
+      <button 
         id=${palette.id} 
         data-project=${palette.project_id} 
         class='trash-btn'

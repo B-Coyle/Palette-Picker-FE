@@ -17,12 +17,12 @@ $(document).ready(function() {
   getProjects();
 });
 
+
 $("#create-project-btn").on("click", e => createProject(e));
 $("#create-palette-btn").on("click", e => createPalette(e));
 $(".color-lock").on("click", e => toggleLock(e));
 $(".generate-palette-btn").on("click", generateColors);
 $(".saved-projects-section").on("click", e => buttonRouter(e));
-$(".saved-palette-container").on("click", e => editPalette(e));
 
 export const getProjects = () => {
   fetchProjects()
@@ -56,13 +56,11 @@ export function createProject(e) {
       DU.populateOptions(project);
       DU.appendProject(project);
       DU.resetInputs();
-      $(".project-exists").addClass("hidden");
     } else {
-      $(".project-exists").removeClass("hidden");
-      //Error with still creating the project name on backend if the project name already exists. Error message will disappear if you type in a new
-      //name. 
+      DU.removeHiddenClass();
+      //Error with still creating the project name on backend if the project name already exists. Error message will disappear if you type in a new name.
     }
-  })
+  });
 }
 
 export function createPalette(e) {
@@ -111,6 +109,8 @@ export function buttonRouter(e) {
     deletePalette(e);
   } else if (targetClasses.includes("delete-project-btn")) {
     deleteProject(e);
+  } else if(targetClasses.includes('edit-palette-btn')) {
+    editCurrentPalette(e);
   }
 }
 
@@ -141,14 +141,13 @@ export function deleteProject(e) {
     .catch(error => console.log(error));
 }
 
-export function editPalette(e) {
+export function editCurrentPalette(e) {
   e.preventDefault();
   const id = e.target.id;
-  console.log('edit test',id)
   const projectID = e.target.dataset.project;
-  // if (id === projectID) {
-  //   fetchPutPalette(id)
-  //     .then(() => getProjects())
-  //     .catch(error => console.log(error));
-  // }
+  if (id === projectID) {
+    fetchPutPalette(id)
+      .then(() => getProjects())
+      .catch(error => console.log(error));
+  }
 }

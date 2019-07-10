@@ -22,10 +22,14 @@ export const DU = {
     $('.palette-name-input').val('');
   },
 
-  // removeHiddenClass: () => {
-  //   $(".project-exists").removeClass("hidden");
-  // },
+  removeHiddenClass: () => {
+    $(".project-exists").removeClass("hidden");
+  },
 
+  addHiddenClass: () => {
+    $(".project-exists").addClass("hidden");
+  },
+  
   changeColor: (id, color) => {
     $(`#color${id}`).css("background-color", color);
     $(`#color${id}-name`).text(color);
