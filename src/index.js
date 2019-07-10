@@ -7,7 +7,8 @@ import { fetchPostProject } from "./api/fetchPostProject";
 import { fetchPostPalette } from "./api/fetchPostPalette";
 import { fetchDeletePalette } from "./api/fetchDeletePalette";
 import { fetchDeleteProject } from "./api/fetchDeleteProject";
-import { DU } from './domUpdates';
+import { DU } from "./domUpdates";
+import { fetchPutPalette } from "./api/fetchPutPalette";
 
 let projects = [];
 
@@ -21,6 +22,7 @@ $("#create-palette-btn").on("click", e => createPalette(e));
 $(".color-lock").on("click", e => toggleLock(e));
 $(".generate-palette-btn").on("click", generateColors);
 $(".saved-projects-section").on("click", e => buttonRouter(e));
+// $(".saved-palettes").onClick("click", e => editPalette(e));
 
 const baseUrl = "https://palette-picker-jbbc.herokuapp.com/api/v1/";
 
@@ -28,14 +30,13 @@ export const getProjects = () => {
   fetchProjects()
     .then(projectsData => getPalettes(projectsData))
     .catch(error => console.log(error));
-}
+};
 
-export const getPalettes = (projectsData) => {
+export const getPalettes = projectsData => {
   projectsData.forEach(project => {
-    fetchPalettes(project)
-      .then(palettes => generateProject(project, palettes))
+    fetchPalettes(project).then(palettes => generateProject(project, palettes));
   });
-}
+};
 
 export const generateProject = (project, palettes) => {
   project.palettes = [];
@@ -50,13 +51,18 @@ export const generateProject = (project, palettes) => {
 export function createProject(e) {
   e.preventDefault();
   const name = $(".project-name-input").val();
-  fetchPostProject(name)
-    .then(data => {
+   fetchPostProject(name).then(data => {
+    if(!projects.map(project => project.name).includes(name)){
       const project = { project_name: name, id: data.id, palettes: [] };
       projects.push(project);
       DU.populateOptions(project);
       DU.appendProject(project);
-    });
+      DU.resetInputs();
+    
+    } else {
+      $('.project-exists').removeClass('hidden')
+    }
+  });
 }
 
 export function createPalette(e) {
@@ -70,15 +76,15 @@ export function createPalette(e) {
     color5: $("#color5-name").text(),
     project_id: $("#project-select").val()
   };
-  fetchPostPalette(palette)
-    .then(data => {
-      const newPalette = { ...palette, id: data.id };
-      const targetProject = projects.find(
-        project => project.id == newPalette.project_id
-      );
-      targetProject.palettes.push(newPalette);
-      DU.appendPalette(targetProject, newPalette)
-    });
+  fetchPostPalette(palette).then(data => {
+    const newPalette = { ...palette, id: data.id };
+    const targetProject = projects.find(
+      project => project.id == newPalette.project_id
+    );
+    targetProject.palettes.push(newPalette);
+    DU.appendPalette(targetProject, newPalette);
+    DU.resetInputs();
+  });
 }
 
 export function generateColors() {
@@ -99,13 +105,11 @@ export function toggleLock(e) {
   DU.toggleLock(id, locked);
 }
 
-
-
 export function buttonRouter(e) {
   const targetClasses = [...e.target.classList];
   if (targetClasses.includes("trash-btn")) {
     deletePalette(e);
-  } else if(targetClasses.includes('delete-project-btn')){
+  } else if (targetClasses.includes("delete-project-btn")) {
     deleteProject(e);
   }
 }
@@ -135,4 +139,15 @@ export function deleteProject(e) {
       }
     })
     .catch(error => console.log(error));
+}
+
+export function editPalette(e) {
+  e.preventDefault();
+  const id = e.target.id;
+  const projectID = e.target.dataset.project;
+  if (id !== projectID) {
+    fetchPutPalette(id)
+      .then(() => getProjects())
+      .catch(error => console.log(error));
+  }
 }
