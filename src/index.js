@@ -8,7 +8,7 @@ import { fetchPostPalette } from "./api/fetchPostPalette";
 import { fetchDeletePalette } from "./api/fetchDeletePalette";
 import { fetchDeleteProject } from "./api/fetchDeleteProject";
 import { DU } from "./domUpdates";
-import { fetchPutPalette } from "./api/fetchPutPalette";
+// import { fetchPutPalette } from "./api/fetchPutPalette";
 
 let projects = [];
 
@@ -22,9 +22,7 @@ $("#create-palette-btn").on("click", e => createPalette(e));
 $(".color-lock").on("click", e => toggleLock(e));
 $(".generate-palette-btn").on("click", generateColors);
 $(".saved-projects-section").on("click", e => buttonRouter(e));
-// $(".saved-palettes").onClick("click", e => editPalette(e));
-
-const baseUrl = "https://palette-picker-jbbc.herokuapp.com/api/v1/";
+// $(".saved-palettes").on("click", e => editPalette(e));
 
 export const getProjects = () => {
   fetchProjects()
@@ -52,17 +50,19 @@ export function createProject(e) {
   e.preventDefault();
   const name = $(".project-name-input").val();
   fetchPostProject(name).then(data => {
-    if (!projects.map(project => project.name).includes(name)) {
-      $(".project-exists").removeClass("hidden");
-    } else {
-      $(".project-exists").addClass("hidden");
+    if (!projects.map(project => project.project_name).includes(name)) {
       const project = { project_name: name, id: data.id, palettes: [] };
       projects.push(project);
       DU.populateOptions(project);
       DU.appendProject(project);
       DU.resetInputs();
+      $(".project-exists").addClass("hidden");
+    } else {
+      $(".project-exists").removeClass("hidden");
+      //Error with still creating the project name on backend if the project name already exists. Error message will disappear if you type in a new
+      //name. 
     }
-  });
+  })
 }
 
 export function createPalette(e) {
@@ -141,13 +141,13 @@ export function deleteProject(e) {
     .catch(error => console.log(error));
 }
 
-export function editPalette(e) {
-  e.preventDefault();
-  const id = e.target.id;
-  const projectID = e.target.dataset.project;
-  if (id !== projectID) {
-    fetchPutPalette(id)
-      .then(() => getProjects())
-      .catch(error => console.log(error));
-  }
-}
+// export function editPalette(e) {
+//   e.preventDefault();
+//   const id = e.target.id;
+//   const projectID = e.target.dataset.project;
+//   if (id === projectID) {
+//     fetchPutPalette(id)
+//       .then(() => getProjects())
+//       .catch(error => console.log(error));
+//   }
+// }
