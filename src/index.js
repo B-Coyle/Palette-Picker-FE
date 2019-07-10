@@ -49,18 +49,18 @@ export const generateProject = (project, palettes) => {
 export function createProject(e) {
   e.preventDefault();
   const name = $(".project-name-input").val();
-  fetchPostProject(name).then(data => {
-    if (!projects.map(project => project.project_name).includes(name)) {
-      const project = { project_name: name, id: data.id, palettes: [] };
-      projects.push(project);
-      DU.populateOptions(project);
-      DU.appendProject(project);
-      DU.resetInputs();
-    } else {
-      DU.removeHiddenClass();
-      //Error with still creating the project name on backend if the project name already exists. Error message will disappear if you type in a new name.
-    }
-  });
+  if (!projects.map(project => project.project_name).includes(name)) {
+    fetchPostProject(name)
+      .then(data => {
+        const project = { project_name: name, id: data.id, palettes: [] };
+        projects.push(project);
+        DU.populateOptions(project);
+        DU.appendProject(project);
+        DU.resetInputs();
+      })
+  } else {
+    DU.removeHiddenClass();
+  }
 }
 
 export function createPalette(e) {
@@ -144,10 +144,8 @@ export function deleteProject(e) {
 export function editCurrentPalette(e) {
   e.preventDefault();
   const id = e.target.id;
-  const projectID = e.target.dataset.project;
-  if (id === projectID) {
-    fetchPutPalette(id)
-      .then(() => getProjects())
+
+  fetchPutPalette(id, palette)
+      .then(() => getProjects(palette))
       .catch(error => console.log(error));
-  }
 }
