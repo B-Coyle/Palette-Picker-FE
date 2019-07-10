@@ -19,7 +19,7 @@ img {
   height: 150px;
   width: 100%;
 }
-
+// // not sure about this one
 
 .palette-container {
   margin: 20px;
@@ -78,10 +78,6 @@ img {
   box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.6);
 }
 
-.generate-button:hover {
-  box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.8);
-}
-
 form {
   display: flex;
   justify-content: center;
@@ -126,10 +122,12 @@ input {
   background-repeat: no-repeat;
   box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.6);
 }
+//originally removed class-may need to add these back in
 
 .button:hover {
   box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.8);
 }
+//originally removed class button-may need to add back in
 
 button {
   width: 150px;
@@ -152,24 +150,6 @@ button {
   padding: 10px;
 }
 
-.saved-palettes-container {
-  width: 600px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  height: 600px;
-  overflow: scroll;
-}
-
-
-.project-container {
-  display: grid;
-  grid-template-columns: 30% 70%;
-  width: 600px;
-  border: 2px solid #343640;
-  text-align: start;
-}
-
 .color1 {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
@@ -185,23 +165,7 @@ button {
   width: 40px;
 }
 
-.palette-trash {
-  display: flex;
-}
-
-.delete-palette {
-  border: none;
-  background: none;
-  width: 40px;
-  height: 40px;
-}
-
-.trash-can {
-  height: 30px;
-  width: auto;
-}
-
-.saved-palettes{
+.saved-palettes {
   display: flex;
   flex-direction: row;
 }
@@ -216,5 +180,5 @@ button {
 }
 
 .hidden {
-	visibility: hidden;
+  visibility: hidden;
 }
