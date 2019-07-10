@@ -17,6 +17,11 @@ export const DU = {
     );
   },
 
+  resetInputs: () => {
+    $('.project-name-input').val('');
+    $('.palette-name-input').val('');
+  },
+
   changeColor: (id, color) => {
     $(`#color${id}`).css("background-color", color);
     $(`#color${id}-name`).text(color);
