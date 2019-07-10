@@ -7,8 +7,8 @@ import { fetchPostProject } from "./api/fetchPostProject";
 import { fetchPostPalette } from "./api/fetchPostPalette";
 import { fetchDeletePalette } from "./api/fetchDeletePalette";
 import { fetchDeleteProject } from "./api/fetchDeleteProject";
+import { fetchPutPalette } from "./api/fetchPutPalette";
 import { DU } from "./domUpdates";
-// import { fetchPutPalette } from "./api/fetchPutPalette";
 
 let projects = [];
 
@@ -22,7 +22,7 @@ $("#create-palette-btn").on("click", e => createPalette(e));
 $(".color-lock").on("click", e => toggleLock(e));
 $(".generate-palette-btn").on("click", generateColors);
 $(".saved-projects-section").on("click", e => buttonRouter(e));
-// $(".saved-palettes").on("click", e => editPalette(e));
+$(".saved-palette-container").on("click", e => editPalette(e));
 
 export const getProjects = () => {
   fetchProjects()
@@ -141,13 +141,14 @@ export function deleteProject(e) {
     .catch(error => console.log(error));
 }
 
-// export function editPalette(e) {
-//   e.preventDefault();
-//   const id = e.target.id;
-//   const projectID = e.target.dataset.project;
-//   if (id === projectID) {
-//     fetchPutPalette(id)
-//       .then(() => getProjects())
-//       .catch(error => console.log(error));
-//   }
-// }
+export function editPalette(e) {
+  e.preventDefault();
+  const id = e.target.id;
+  console.log('edit test',id)
+  const projectID = e.target.dataset.project;
+  // if (id === projectID) {
+  //   fetchPutPalette(id)
+  //     .then(() => getProjects())
+  //     .catch(error => console.log(error));
+  // }
+}
