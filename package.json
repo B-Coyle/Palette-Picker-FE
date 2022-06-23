@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "jquery": "^3.4.1",
-    "jsdom": "^15.1.1",
+    "jsdom": "^16.5.0",
     "random-hex-color": "^1.0.1"
   }
 }
